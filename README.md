@@ -130,11 +130,12 @@ cd ANY
 - `mediapipe==0.8.11`
 - `opencv_python==4.6.0.66`
 - `pandas==1.4.4`
+- `numpy~=1.23.3`
 
 To install:
 
 ```bash
-pip install mediapipe==0.8.11 opencv_python==4.6.0.66 pandas==1.4.4
+pip install mediapipe==0.8.11 opencv_python==4.6.0.66 pandas==1.4.4 numpy~=1.23.3
 ```
 
 or
