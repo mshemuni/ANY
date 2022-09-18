@@ -18,7 +18,7 @@ and do operations.
 `Image` can read data from disk and stores the data in `self.data`.
 
 ```python
-from any.any import Image
+from any import Image
 
 image = Image(r"wll-asl.jpg")
 image.show()
@@ -29,7 +29,7 @@ Simular to `Image`, `Camera` stores the data in `self.data`, the difference is t
 disk.
 
 ```python
-from any.any import Camera
+from any import Camera
 
 camera = Camera(0)
 camera.start()
@@ -42,12 +42,13 @@ must for a `Detector` object is that it must contain a `detect` method. This met
 
 - `Hand`
 - `Face`
+- `Pose`
 
 ### Hand
 The `Hand` class uses `mediapipe` and can detect hands on a source.
 
 ```python
-from any.any import Image, Hand
+from any import Image, Hand
 
 image = Image(r"wll-asl.jpg")
 hand = Hand(image)
@@ -63,7 +64,7 @@ Here we can see the hand detector was executed on an `Image` source.
 The `Face` class uses `mediapipe` and can detect faces on a source.
 
 ```python
-from any.any import Camera, Face
+from any import Camera, Face
 
 camera = Camera(0)
 camera.start()
@@ -77,7 +78,42 @@ Here we can see the face detector was executed on a `Camera` source.
 
 ![Face](face.png)
 
-## Getting Any
+### Pose
+The `Pose` class uses `mediapipe` and can detect poses on a source.
+
+```python
+from any import Image, Pose
+
+image = Image(r"body.png")
+pose = Pose(image)
+image.draw_pints = pose.detect()
+image.show()
+```
+
+Here we can see the body detector was executed on a `Image` source.
+
+![Body](body.png)
+
+### SelfieSegmentation
+The `SelfieSegmentation` class uses `mediapipe` and can detect person and return a mask. One can use the mask to replace background.
+
+```python
+from any import Camera, Image, SelfieSegmentation
+
+camera = Camera(0)
+camera.start()
+camera.toggle_show()
+i = Image("bg.jpg")
+ss = SelfieSegmentation(camera, i)
+while True:
+    camera.replace = ss.detect()
+```
+
+Here we can see the SelfieSegmentation was executed on a `Camera` source and background was replaced by an `Image`.
+
+![SelfieSegmentation](segmantation.gif)
+
+## Getting `Any`
 `Any` is open source and can be used as GPL-3.0 license allows
 
 ### Download

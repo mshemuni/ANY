@@ -5,7 +5,7 @@ import cv2
 class Source:
     def __init__(self):
         """
-        Base Source class which all other sources would inherit from
+        Base Source class which any other sources would inherit from
         """
         self.data = None
 
@@ -21,6 +21,7 @@ class Image(Source):
         self.data = cv2.imread(self.path)
         self.draw_box = None
         self.draw_pints = None
+        self.replace = None
 
     def show(self) -> None:
         """
@@ -30,12 +31,17 @@ class Image(Source):
         if self.draw_box is not None:
             for each in self.draw_box.to_numpy():
                 each = each.astype(int)
-                self.data = cv2.rectangle(self.data, (each[0], each[1]), (each[0] + each[3], each[1] + each[2]), (255, 0, 0), 2)
+                self.data = cv2.rectangle(self.data, (each[0], each[1]), (each[0] + each[3], each[1] + each[2]),
+                                          (255, 0, 0), 2)
         # Draws points on the image if box list were given
         if self.draw_pints is not None:
             for each in self.draw_pints.to_numpy():
                 each = each.astype(int)
                 self.data = cv2.circle(self.data, (each[0], each[1]), 5, (0, 255, 0), -1)
+
+        # Replace the image ith given image
+        if self.replace is not None:
+            self.data = self.replace
 
         cv2.imshow("image", self.data)
         cv2.waitKey(0)
@@ -56,6 +62,7 @@ class Camera(threading.Thread, Source):
         self.data = None
         self.draw_box = None
         self.draw_pints = None
+        self.replace = None
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}(id={self.source_id})"
@@ -79,20 +86,22 @@ class Camera(threading.Thread, Source):
                 if self.draw_box is not None:
                     for each in self.draw_box.to_numpy():
                         each = each.astype(int)
-                        self.data = cv2.rectangle(self.data, (each[0], each[1]), (each[0] + each[3], each[1] + each[2]), (255, 0, 0), 2)
+                        self.data = cv2.rectangle(self.data, (each[0], each[1]), (each[0] + each[3], each[1] + each[2]),
+                                                  (255, 0, 0), 2)
                 # Draws points on the image if box list were given
                 if self.draw_pints is not None:
                     for each in self.draw_pints.to_numpy():
                         each = each.astype(int)
                         self.data = cv2.circle(self.data, (each[0], each[1]), 5, (0, 255, 0), -1)
 
-                cv2.imshow('frame', self.data)
+                # Replace the image ith given image
+                if self.replace is not None:
+                    cv2.imshow('frame', self.replace)
+                else:
+                    cv2.imshow('frame', self.data)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
         self.vid.release()
         cv2.destroyAllWindows()
-
-
-

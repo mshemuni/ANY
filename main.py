@@ -1,4 +1,4 @@
-from any import Image, Camera, Face, Hand
+from any import Image, Camera, Face, Hand, Pose, SelfieSegmentation
 
 
 def img():
@@ -21,6 +21,25 @@ def cam():
         camera.draw_box = face.detect()
 
 
+def pos():
+    image = Image(r"body.png")
+    pose = Pose(image)
+    image.draw_pints = pose.detect()
+    image.show()
+
+
+def seg():
+    camera = Camera(0)
+    camera.start()
+    camera.toggle_show()
+    i = Image("bg.jpg")
+    ss = SelfieSegmentation(camera, i)
+    while True:
+        camera.replace = ss.detect()
+
+
 if __name__ == '__main__':
     img()
     cam()
+    pos()
+    seg()
